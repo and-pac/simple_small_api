@@ -65,7 +65,7 @@ Where XX.XX.XX.XX is your local ip ( you are no longer running the code on local
 You can use this in aws ( or other cloud).
 Some kind of kubernetes deployment and postgres (rds or not) similar to :
 
-![VPC](tools/aws_schema/aws_kube_postgres.jpg)
+![VPC](https://github.com/and-pac/simple_small_api/blob/e76a37a320e3f35393da1febf15fb1886aa5d095/tools/aws_schema/aws_kube_postgres.png)
 
 ## Helm
 
