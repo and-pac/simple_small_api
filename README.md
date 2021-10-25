@@ -88,6 +88,7 @@ If you do not want to use kubernetes , but would stil like to see a rolling depl
 ```sh
 ansible-playbook -i inventory install_docker_and_haproxy.yaml -b
 ```
+
 	This requires sudo permissions (become)
 4.	Bring up a temporary postgress on configured docker server :
 ```sh
@@ -98,6 +99,7 @@ ansible-playbook -i inventory temp_postgres_in_docker.yaml
 ```sh
 ansible-playbook -i inventory release_app.yaml
 ```
+
 	This will promt you for the release tag of the application. 
 	It is configured to pick the images from dockerhub : andpac/simple_small_api
 	You can use 2 versions : 0.0.2 and 0.0.3 
@@ -108,3 +110,4 @@ ansible-playbook -i inventory release_app.yaml
 	The app is simple , so no need for drain or waiting time.
 
 	Depending on the number of servers , you might want to add a check that we do not take out too much power at one time ( if you modify the serial setting ).
+
