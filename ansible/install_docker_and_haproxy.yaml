@@ -1,0 +1,7 @@
+---
+- hosts: webserver
+  roles:
+    - role: 'roles/docker'
+- hosts: haproxy
+  roles:
+    - role: 'roles/haproxy'

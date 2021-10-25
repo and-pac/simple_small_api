@@ -1,0 +1,46 @@
+---
+- hosts: webserver
+  serial: 1
+  vars:
+    container_image: andpac/simple_small_api
+    container_name: app1
+  vars_prompt:
+
+  - name: release_tag
+    prompt: What is the app release tag ?
+    default: "0.0.2"
+    private: no
+
+  pre_tasks:
+
+  - name: disable the server in haproxy
+    haproxy: 'state=disabled backend=app host={{ inventory_hostname }} socket=/run/haproxy/admin.sock'
+    delegate_to: "{{ item }}"
+    with_items: "{{ groups.haproxy }}"    
+
+  tasks:
+
+  - name: Pull Docker image
+    docker_image:
+      name: "{{ container_image }}:{{ release_tag }}"
+      source: pull
+
+  - name: Start container with pulled image
+    docker_container:
+      name: "{{ container_name }}"
+      image: "{{ container_image }}:{{ release_tag }}"
+      state: started
+      ports:
+        - "8080:80"
+      env:
+        PG_HOST: "{{ hostvars[groups['postgres'][0]]['ansible_host'] }}"
+
+  post_tasks:
+
+  - name: wait for webserver to come up
+    wait_for: 'host={{ inventory_hostname }} port=8080 state=started timeout=30'
+
+  - name: enable the server in haproxy
+    haproxy: 'state=enabled backend=app host={{ inventory_hostname }} socket=/run/haproxy/admin.sock'
+    delegate_to: "{{ item }}"
+    with_items: "{{ groups.haproxy }}"

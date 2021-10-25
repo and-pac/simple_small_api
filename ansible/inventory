@@ -1,0 +1,21 @@
+all:
+  children:
+    webserver:
+      hosts:
+        dock01:
+          ansible_host: 192.168.56.201
+        dock02:
+          ansible_host: 192.168.56.202
+        dock03:
+          ansible_host: 192.168.56.203
+
+    haproxy:
+      hosts:
+        dockgw:
+          ansible_host: 192.168.56.200
+
+    postgres:
+      hosts:
+        dock01:
+          ansible_host: 192.168.56.201
+

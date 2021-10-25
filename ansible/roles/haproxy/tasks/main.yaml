@@ -1,0 +1,25 @@
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'nfs-common'] #, 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+- name: Add Haproxy Repository
+  apt_repository:
+    repo: deb-src http://ppa.launchpad.net/vbernat/haproxy-2.4/ubuntu bionic main
+    state: present
+
+- name: Install haproxy
+  apt: name={{ item }} state=present update_cache=yes
+  loop: [ 'haproxy']
+
+
+- name: Configure haproxy
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+
+- name: Start the haproxy service
+  service: name=haproxy state=started enabled=yes
+
+- name: adding existing user vagrant to group haproxy
+  user:
+    name: vagrant
+    groups: haproxy
+    append: yes

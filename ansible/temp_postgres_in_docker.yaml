@@ -1,0 +1,23 @@
+---
+- hosts: postgres
+
+  tasks:
+
+  - name: Pull postgres13-alpine
+    docker_image:
+      name: "postgres:13-alpine"
+      source: pull
+
+  - name: Start postgres
+    docker_container:
+      name: "postgres"
+      image: "postgres:13-alpine"
+      state: started
+      ports:
+        - "5432:5432"
+      env:
+        POSTGRES_PASSWORD: "somePassword"
+
+  - name: Init db
+    ansible.builtin.shell: docker exec postgres psql -U postgres -c "CREATE TABLE IF NOT EXISTS birthdays (username VARCHAR(255) PRIMARY KEY, birth_date DATE NOT NULL);"
+
